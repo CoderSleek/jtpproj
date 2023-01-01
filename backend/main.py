@@ -4,7 +4,7 @@ from uvicorn import run
 
 app = FastAPI()
 
-origins = ['https://localhost:3000'] #reactJS port
+origins = ['http://localhost:3000'] #reactJS port
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,6 +18,9 @@ app.add_middleware(
 def defaultRoute():
     return "API functional"
 
+@app.post('/check')
+def check():
+    return "working"
 
 if __name__ == "__main__":
     run(app, port=5000)
