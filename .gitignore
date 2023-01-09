@@ -1,4 +1,4 @@
+*.pkl
 /trashcode.py
 */__pycache__/*
 /frontend/node_modules
-*.pkl
