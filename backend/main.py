@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Request, Response, status
+from fastapi import FastAPI, Request, Response, status, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
+from controllers.movies import router as moviesRouter
 
 app = FastAPI()
 
@@ -14,13 +15,13 @@ app.add_middleware(
     allow_headers="*"
     )
 
+router = APIRouter()
+router.include_router(moviesRouter)
+app.include_router(router)
+
 @app.get('/')
 def defaultRoute():
     return "API functional"
-
-@app.post('/check')
-def check():
-    return "working"
 
 if __name__ == "__main__":
     run(app, port=5000)
