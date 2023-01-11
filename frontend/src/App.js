@@ -1,39 +1,73 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react'
+
 import './App.css';
-import {useEffect} from 'react'
+import './components/BookTile'
+import './components/Searchbar'
+import SearchBar from './components/Searchbar';
+
+const API_URL = 'http://localhost:5000';
 
 function App() {
+	let pageNumber = 0;
+	let isFuzzy = true;
+	const [searchTerm, setSearchTerm] = useState('');
+	const [error, setError] = useState('');
+	const [booksRecommendationList, setBooksRecommendationList] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(()=>{
-    console.log('started');
-    fetch('http://127.0.0.1:5000/check', {
-      method: "post",
-      headers:{"content-type":"application/json"}
-    }).then((res)=>{
-      res.json()
-      .then((data)=>console.log(data));
-    })
-  }, []);
+	useEffect(() => { }, booksRecommendationList);
 
-  return (
-    <></>
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    // </div>
-  );
+	function handleChange(event) {
+		setSearchTerm(event.target.value);
+	}
+
+	async function handleSubmit(event) {
+		event.preventDefault();
+
+		if (!searchTerm) {
+			setError('Search Field cannot be empty');
+			return;
+		}
+		setError('');
+
+		try {
+			const response = await fetch(
+				API_URL + '/findbook?' +
+				new URLSearchParams({
+					'title': searchTerm.trim(),
+					'fuzzy': isFuzzy
+				}).toString(),
+				{
+					method: 'GET'
+				}
+			);
+
+
+			if (response.status === 200) {
+				const data = await response.json();
+				if (data) {
+					setBooksRecommendationList(data['suggested']);
+					console.log(booksRecommendationList);
+				} else {
+					console.log('nothing found');
+				}
+			} else {
+				console.log('internal server error');
+			}
+		} catch { }
+	}
+
+	return (
+		<>
+			<SearchBar
+				handleSubmit={handleSubmit}
+				searchTerm={searchTerm}
+				handleChange={handleChange} 
+				error={error}
+			/>
+		</>
+	);
 }
+
 
 export default App;
