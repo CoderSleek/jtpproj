@@ -23,5 +23,6 @@ app.include_router(router)
 def defaultRoute():
     return "API functional"
 
-if __name__ == "__main__":
+
+if __name__ == "__main__":   
     run(app, port=5000)

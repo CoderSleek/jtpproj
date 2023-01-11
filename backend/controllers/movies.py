@@ -1,26 +1,57 @@
-from fastapi import APIRouter
-# import database.book as db
+from fastapi import APIRouter, Response, Request, status
 
-import os
-import sys
-x = os.path.abspath('backend')
-sys.path.append(x)
-from database import book as db
-from recommender import recommend
+import database as db
+import recommender
+from urllib.parse import unquote_plus
 
 router = APIRouter()
 
-@router.get('/findmovie')
-def findAndRecommendMovie(title: str):
-    listoftitles = list(db.fuzzyTitleSearch(title))
+@router.get('/findbook', tags=['recommend'])
+def findAndRecommendMovie(title: str, fuzzy: bool, res: Response) -> dict:
+    title = unquote_plus(title)
+
+    try:
+        if fuzzy:
+            return _fuzzySearch(title)
+        else:
+            return _exactSearch(title)
+
+    except Exception as e:
+        print('exception', e)
+        res.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return None
+
+
+def _fuzzySearch(title: str):
+    listoftitles = list(db.book.fuzzyTitleSearch(title))
 
     if not listoftitles:
-        return
+        return None
 
-    list_of_similar_movies = recommend(listoftitles[0]['_id'])
-
+    list_of_similar_movies = recommender.recommend(listoftitles[0]['_id'])
+    listoftitles = [(i.update({'_id': str(i['_id'])}) or i) for i in listoftitles]
+    #converts Objectid to str, .update returns none, or with i gives back the update object
+    
+    list_of_similar_movies = [(i.update({'_id': str(i['_id'])}) or i) for i in list_of_similar_movies]
     
     return {
-        'similarNames': listoftitles,
+        'bookObjects': listoftitles,
+        'suggested': list_of_similar_movies
+    }
+
+
+def _exactSearch(title: str):
+    bookObject = db.book.getDocumentByTitle(title)
+
+    if not bookObject:
+        return None
+
+    list_of_similar_movies = recommender.recommend(bookObject['_id'])
+
+    bookObject['_id'] = str(bookObject['_id'])
+    list_of_similar_movies = [(i.update({'_id': str(i['_id'])}) or i) for i in list_of_similar_movies]
+
+    return {
+        'bookObjects': bookObject,
         'suggested': list_of_similar_movies
     }

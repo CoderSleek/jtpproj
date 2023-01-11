@@ -1,8 +1,9 @@
 import pymongo
 from bson.objectid import ObjectId
+import os
+import pickle
 
-#default mongodb port
-_client = pymongo.MongoClient("mongodb://localhost:27017")
+_client = pymongo.MongoClient(os.environ['MONGODB_URL'])
 _database = _client.books
 _collection = _database.similarityindex
 
@@ -23,3 +24,16 @@ def getBookIdsUsingIndexes(indexList: list):
 
     except Exception as e:
         return None
+
+
+def writeMatrixToDb(dataframe: 'pandas.Dataframe', similaritymatrix: 'numpy.ndarray'):
+    try:
+        for index, value in dataframe.iterrows():
+            _collection.insert_one({
+                'index': index,
+                'bookid': ObjectId(value['_id']),
+                'data': pickle.dumps(similaritymatrix[index])
+            })
+
+    except Exception as e:
+        print(e)

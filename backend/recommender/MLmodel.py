@@ -51,24 +51,24 @@ def _joinStrings(*listOfLiteral: list) -> list[str]: #fix docs
 
 
 def createModel() -> None:
-    # df = pd.json_normalize(db.getAllDocuments())
-    # df = df[['_id', 'title', 'description', 'genres', 'characters', 'setting', 'author']]
+    df = pd.json_normalize(db.getAllDocuments())
+    df = df[['_id', 'title', 'description', 'genres', 'characters', 'setting', 'author']]
 
-    # df['description'] = df['description'].apply(self._convert)
-    # df['author'] = df['author'].apply(self._tokeniseAuthorName)
-    # df['genres'] = df['genres'].apply(self._joinWords)
-    # df['setting'] = df['setting'].apply(self._joinWords)
-    # df['characters'] = df['characters'].apply(self._joinWords)
+    df['description'] = df['description'].apply(self._convert)
+    df['author'] = df['author'].apply(self._tokeniseAuthorName)
+    df['genres'] = df['genres'].apply(self._joinWords)
+    df['setting'] = df['setting'].apply(self._joinWords)
+    df['characters'] = df['characters'].apply(self._joinWords)
 
-    # df2 = df[['_id', 'title']].copy()
-    # df2['tags'] = self._joinStrings(df['genres'], df['description'], df['author'], df['characters'], df['setting'])
+    df2 = df[['_id', 'title']].copy()
+    df2['tags'] = self._joinStrings(df['genres'], df['description'], df['author'], df['characters'], df['setting'])
 
-    # vectorizer = CountVectorizer(max_features=5000, stop_words='english')
-    # vectorizedArray = vectorizer.fit_transform(df2['tags']).toarray()
-    # similarityMatrix = cosine_similarity(vectorizedArray)
+    vectorizer = CountVectorizer(max_features=5000, stop_words='english')
+    vectorizedArray = vectorizer.fit_transform(df2['tags']).toarray()
+    similarityMatrix = cosine_similarity(vectorizedArray)
 
-    # df2 = pickle.load(open('dataframe.pkl', 'rb'))
-    # similarityMatrix = pickle.load(open('similarity_index.pkl', 'rb'))
+    df2 = pickle.load(open('dataframe.pkl', 'rb'))
+    similarityMatrix = pickle.load(open('similarity_index.pkl', 'rb'))
     
     db.writeMatrixToDb(df2, similarityMatrix)
 
@@ -86,15 +86,10 @@ def getTopGenres():
 
     x = list(zip(x,y))
     x.sort(reverse=True,key=lambda x: x[1])
-    print(x)
 
-    # with open('j.txt', 'w') as j:
-    #     for i in ():
-    #         print(i, file=j)
 
 if __name__ == '__main__':
     createModel()
     # getTopGenres()
-    pass
 
 #difflib

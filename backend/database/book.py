@@ -1,9 +1,9 @@
 #from model import Todo
 import pymongo
 from bson.objectid import ObjectId
-        
-#default mongodb port
-_client = pymongo.MongoClient("mongodb://localhost:27017")
+import os
+
+_client = pymongo.MongoClient(os.environ['MONGODB_URL'])
 _database = _client.books
 _collection = _database.book
 
@@ -19,16 +19,6 @@ def getAllDocuments() -> "pymongo.cursor | None":
         return None
 
 
-# def getOneDocument(key: str, value: any) -> dict | None:
-#     try:
-#         if key and value:
-#             document = _collection.find_one({key: value}, _filter)
-#             return document
-#         # else implicit return None
-#     except Exception as e:
-#         return None
-
-
 def getNDocumentsById(listOfValues: int) -> "pymongo.cursor | None":
     try:
         documents = _collection.find({'_id': {'$in': listOfValues}}, _filter)
@@ -36,15 +26,6 @@ def getNDocumentsById(listOfValues: int) -> "pymongo.cursor | None":
 
     except Exception as e:
         return None
-
-
-# def getDocumentById(id: ObjectId) -> dict | None:
-#     try:
-#         document = _collection.find_one({'_id': ObjectId(id)}, _filter)
-#         return document
-
-#     except Exception as e:
-#         return None
 
 
 def fuzzyTitleSearch(title: str) -> "pymonog.cursor | None":
@@ -57,15 +38,10 @@ def fuzzyTitleSearch(title: str) -> "pymonog.cursor | None":
         return None
 
 
-# def getDocumentByTitle(title: str) -> dict | None:
-#     try:
-#         document = _collection.find_one({'title': title}, _filter)
-#         return document
+def getDocumentByTitle(title: str) -> dict | None:
+    try:
+        document = _collection.find_one({'title': title}, _filter)
+        return document
 
-#     except Exception as e:
-#         return None
-
-
-def writeMatrixToDb(dataframe: 'pandas.Dataframe', similaritymatrix: 'numpy.ndarray'):
-    print(dataframe.head())
-    print(similaritymatrix)
+    except Exception as e:
+        return None
