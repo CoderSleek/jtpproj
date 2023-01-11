@@ -5,10 +5,10 @@ function BookTile(props) {
     <div>
       <img src={props.coverImg} alt={props.title} />
       <h2>{props.title}</h2>
-      <p>{props.description}</p>
       <div>
         Rating: {props.rating}
       </div>
+      {/* <p>{props.description}</p> */}
       <div>
         Genres: {props.genres.join(', ')}
       </div>

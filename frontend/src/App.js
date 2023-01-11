@@ -2,20 +2,39 @@ import { useState, useEffect } from 'react'
 
 import './App.css';
 import './components/BookTile'
+import BookTile from './components/BookTile';
 import './components/Searchbar'
 import SearchBar from './components/Searchbar';
 
 const API_URL = 'http://localhost:5000';
 
 function App() {
-	let pageNumber = 0;
-	let isFuzzy = true;
+	const [pageNumber, setPageNumber] = useState(0);
+	const [isFuzzy, setIsFuzzy] = useState(false);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [error, setError] = useState('');
-	const [booksRecommendationList, setBooksRecommendationList] = useState([]);
+	// const [booksRecommendationList, setBooksRecommendationList] = useState([]);
+	const booksRecommendationList = [];
+	const [bookRecommEles, setBookRecommEles] = useState([]);
+
 	const [isLoading, setIsLoading] = useState(false);
 
-	useEffect(() => { }, booksRecommendationList);
+	useEffect(() => {createBookRecommEles()}, [booksRecommendationList, pageNumber]);
+
+	function createBookRecommEles(){
+		const tempArr = booksRecommendationList.slice(pageNumber * 5, pageNumber * 5 -1);
+		
+		setBookRecommEles(tempArr.map((bookObject) => {
+			return <BookTile
+					key={bookObject['_id']}
+					title={bookObject.title}
+					coverImg={bookObject.coverImg}
+					rating={bookObject.rating}
+					description={bookObject.description}
+					genres={bookObject.genres}
+				/>
+		}));
+	}
 
 	function handleChange(event) {
 		setSearchTerm(event.target.value);
@@ -46,7 +65,7 @@ function App() {
 			if (response.status === 200) {
 				const data = await response.json();
 				if (data) {
-					setBooksRecommendationList(data['suggested']);
+					booksRecommendationList = data['suggested'];
 					console.log(booksRecommendationList);
 				} else {
 					console.log('nothing found');
@@ -65,6 +84,7 @@ function App() {
 				handleChange={handleChange} 
 				error={error}
 			/>
+			{bookRecommEles}
 		</>
 	);
 }
