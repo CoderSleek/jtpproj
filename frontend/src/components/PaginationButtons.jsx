@@ -4,7 +4,8 @@ function PaginationButtons({handlePageNumberChange}){
     const styles = {
         'marginTop': '10px',
         'left': '50%',
-        'transform': 'translate(-50%, 0)'
+        'transform': 'translate(-50%, 0)',
+        'marginBottom': '50px'
     }
 
     function wrapSetPageNumber(pageNumber){

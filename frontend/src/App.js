@@ -7,31 +7,18 @@ import SearchComponent from './components/SearchComponent';
 import PaginationButtons from './components/PaginationButtons';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Tooltip from './components/test';
+import InfoBox from './components/InfoBox';
 
 const API_URL = 'http://localhost:5000';
 let bookSearchEles = [];
 
-// function renderRandomSuggestions(){
-
-// }
-
-function createFuzzySearchEles(data){
-	bookSearchEles = data['searched'].map(mapBookObjectToBookTile);
-}
-
-function createExactSearchEles(data){
-	bookSearchEles = [mapBookObjectToBookTile(data['searched'])]
-}
-
-function mapBookObjectToBookTile(bookObject){
+function mapBookObjectToBookTile(bookObject, infoCardState, setInfoCardState) {
 	return <BookTile
 		key={bookObject['_id']}
-		id={bookObject['_id']}
-		title={bookObject.title}
-		coverImg={bookObject.coverImg}
-		rating={bookObject.rating}
-		description={bookObject.description}
-		genres={bookObject.genres}
+		bookObject={bookObject}
+		infoCardState={infoCardState}
+		handleSetInfoCardState={setInfoCardState}
 	/>
 }
 
@@ -41,32 +28,33 @@ function App() {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [error, setError] = useState('');
 	const [bookRecommEles, setBookRecommEles] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
+	const [infoBox1Content, setInfoBox1Content] = useState([]);
+	const [infoBox2Content, setInfoBox2Content] = useState([]);
 	const [booksRecommendationList, setBooksRecommendationList] = useState([]);
 
-	useEffect(() =>{
-		try{
+	useEffect(() => {
+		try {
 			fetch(
 				API_URL + '/recommendrandom',
 				{
 					method: 'GET'
 				}
 			)
-			.then(res => res.json())
-			.then(listOfRecomm => {
-				setBooksRecommendationList(listOfRecomm['suggested'])
-			});
-		} catch(err){
+				.then(res => res.json())
+				.then(listOfRecomm => {
+					setBooksRecommendationList(listOfRecomm['suggested'])
+				});
+		} catch (err) {
 			setErrorWrapper('Trouble Connecting to the server');
-		}}
-	, []);
+		}
+	}
+		, []);
 
-	useEffect(()=>{
+	useEffect(() => {
 		createBookRecommEles();
-	}, [booksRecommendationList, pageNumber]);
+	}, [pageNumber , booksRecommendationList]);
 
-
-	function setErrorWrapper(errorMsg){
+	function setErrorWrapper(errorMsg) {
 		bookSearchEles = [];
 		setBooksRecommendationList([]);
 		setBookRecommEles([]);
@@ -74,13 +62,25 @@ function App() {
 		setError(errorMsg);
 	}
 
-	function createBookRecommEles(){
-		if(!booksRecommendationList.length){
+	function createFuzzySearchEles(data) {
+		bookSearchEles = data['searched'].map(bookObject => {
+			return mapBookObjectToBookTile(bookObject, infoBox1Content, setInfoBox1Content);
+		});
+	}
+
+	function createExactSearchEles(data) {
+		bookSearchEles = [mapBookObjectToBookTile(data['searched'], infoBox1Content, setInfoBox1Content)]
+	}
+
+	function createBookRecommEles() {
+		if (!booksRecommendationList.length) {
 			return;
 		}
 
 		const tempArr = booksRecommendationList.slice(pageNumber * 5, (pageNumber + 1) * 5);
-		setBookRecommEles(tempArr.map(mapBookObjectToBookTile));
+		setBookRecommEles(tempArr.map(bookObject => {
+			return mapBookObjectToBookTile(bookObject, infoBox2Content, setInfoBox2Content);
+		}));
 	}
 
 	function handleSearchTermChange(event) {
@@ -120,7 +120,7 @@ function App() {
 			} else {
 				setErrorWrapper('Bad response');
 			}
-		} catch(err) { setErrorWrapper('Connectivity issue') }
+		} catch (err) { setErrorWrapper('Connectivity issue') }
 	}
 
 	return (
@@ -128,27 +128,42 @@ function App() {
 			<SearchComponent
 				handleSubmit={handleSubmit}
 				searchTerm={searchTerm}
-				handleChange={handleSearchTermChange} 
+				handleChange={handleSearchTermChange}
 				error={error}
 			/>
 			<ToggleSlider
 				handleToggle={setIsFuzzy}
 				toggleStaus={isFuzzy}
 			/>
-			{bookSearchEles.length > 0 && <div>
+			{bookSearchEles.length > 0 && <div className='search--book-box'>
 				<h2 className='book--box-title'>Search Results</h2>
-					<div className="search--list">
-						{bookSearchEles}
-					</div>
+				<div className="search--list">
+					{bookSearchEles}
 				</div>
+				{/* {
+					Object.keys(infoBox2Content).length !== 0 &&
+					<InfoBox 
+					className='info--box-1'
+					info={infoBox1Content}
+					/>
+				} */}
+			</div>
 			}
-			{booksRecommendationList.length > 0 && <div>
+			{booksRecommendationList.length > 0 && <div className='recommend--book-box'>
 				{bookSearchEles.length === 0 ? <h2 className='book--box-title'>For you</h2> : <h2 className='book--box-title'>Similar to what you like</h2>}
 				<div className="recommendation--list">
-				{bookRecommEles}
+					{bookRecommEles}
 				</div>
+				{/* {
+					Object.keys(infoBox2Content).length !== 0 &&
+					<InfoBox 
+					className='info--box-2'
+					info={infoBox2Content}
+					/>
+				} */}
 			</div>}
-			{bookRecommEles.length > 0 && <PaginationButtons handlePageNumberChange={setPageNumber}/>}
+			{bookRecommEles.length > 0 && <PaginationButtons handlePageNumberChange={setPageNumber} />}
+			<Tooltip text="hello" />
 		</>
 	);
 }

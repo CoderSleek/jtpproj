@@ -10,4 +10,19 @@
 
 .search--list {
   justify-content: start;
+  /* justify-content: space-around; */
+}
+
+.search--list > .booktile--single{
+  /* margin-right: calc((80vw / 5) - 250px); */
+  margin-right: 27px
+  /* margin-right: 57px; */
+}
+
+.book--box-title{
+  margin-left: calc(((100vw - 80%) / 2 + 3px));
+}
+
+.search--book-box{
+  margin-bottom: 50px;
 }
