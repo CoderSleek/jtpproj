@@ -36,4 +36,4 @@ def writeMatrixToDb(dataframe: 'pandas.Dataframe', similaritymatrix: 'numpy.ndar
             })
 
     except Exception as e:
-        print(e)
+        print('exception', e)

@@ -1,0 +1,27 @@
+.search-bar-and-button{
+    width: 600px;
+    display: flex;
+    box-sizing: border-box;
+    position: relative;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -0%);
+    background-color: blue;
+}
+
+.search-bar-and-button > button {
+    margin-left: 10px;
+}
+
+.search--form{
+    height: 200px;
+    background-color: brown;
+}
+
+.errorMsg{
+    position: relative;
+    width: 300px;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}

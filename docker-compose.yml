@@ -16,10 +16,10 @@ services:
     container_name: backend
     ports:
       - 5000:5000
-    links:
-      - mongo_database
+    # links:
+    #   - mongo_database
     environment:
-      - MONGODB_URL: mongo_db://mongo_database:27017
+      MONGODB_URL: "mongodb://mongo_database:27017"
     depends_on:
       - database
     volumes:
