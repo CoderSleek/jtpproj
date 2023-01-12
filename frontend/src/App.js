@@ -44,8 +44,6 @@ function App() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [booksRecommendationList, setBooksRecommendationList] = useState([]);
 
-	useEffect(createBookRecommEles, [booksRecommendationList, pageNumber]);
-	console.log(isFuzzy);
 	useEffect(() =>{
 		try{
 			fetch(
@@ -55,11 +53,18 @@ function App() {
 				}
 			)
 			.then(res => res.json())
-			.then(listOfRecomm => setBooksRecommendationList(listOfRecomm));
+			.then(listOfRecomm => {
+				setBooksRecommendationList(listOfRecomm['suggested'])
+			});
 		} catch(err){
 			setErrorWrapper('Trouble Connecting to the server');
 		}}
 	, []);
+
+	useEffect(()=>{
+		createBookRecommEles();
+	}, [booksRecommendationList, pageNumber]);
+
 
 	function setErrorWrapper(errorMsg){
 		bookSearchEles = [];
@@ -75,7 +80,6 @@ function App() {
 		}
 
 		const tempArr = booksRecommendationList.slice(pageNumber * 5, (pageNumber + 1) * 5);
-
 		setBookRecommEles(tempArr.map(mapBookObjectToBookTile));
 	}
 
@@ -121,7 +125,6 @@ function App() {
 
 	return (
 		<>
-		{/* <div className='search--components'> */}
 			<SearchComponent
 				handleSubmit={handleSubmit}
 				searchTerm={searchTerm}
@@ -132,13 +135,19 @@ function App() {
 				handleToggle={setIsFuzzy}
 				toggleStaus={isFuzzy}
 			/>
-		{/* </div> */}
-			<div className="search--list">
-				{bookSearchEles}
-			</div>
-			<div className="recommendation--list">
+			{bookSearchEles.length > 0 && <div>
+				<h2 className='book--box-title'>Search Results</h2>
+					<div className="search--list">
+						{bookSearchEles}
+					</div>
+				</div>
+			}
+			{booksRecommendationList.length > 0 && <div>
+				{bookSearchEles.length === 0 ? <h2 className='book--box-title'>For you</h2> : <h2 className='book--box-title'>Similar to what you like</h2>}
+				<div className="recommendation--list">
 				{bookRecommEles}
-			</div>
+				</div>
+			</div>}
 			{bookRecommEles.length > 0 && <PaginationButtons handlePageNumberChange={setPageNumber}/>}
 		</>
 	);

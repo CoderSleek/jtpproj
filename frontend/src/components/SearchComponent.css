@@ -2,11 +2,11 @@
     width: 600px;
     display: flex;
     box-sizing: border-box;
-    position: relative;
-    top: 30%;
+    position: absolute;
+    /* top: 30%; */
+    bottom: 0px;
     left: 50%;
-    transform: translate(-50%, -0%);
-    background-color: blue;
+    transform: translate(-50%, 0%);
 }
 
 .search-bar-and-button > button {
@@ -15,7 +15,7 @@
 
 .search--form{
     height: 200px;
-    background-color: brown;
+    position: relative;
 }
 
 .errorMsg{
