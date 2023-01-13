@@ -1,24 +1,31 @@
 import React from 'react';
 import './SearchComponent.css'
 
-function SearchComponent({handleSubmit, searchTerm, handleChange, error}) {
+function SearchComponent({ handleSubmit, searchTerm, handleChange, error, searchByGenreHandler }) {
   const errorStyles = {
     'textAlign': 'center'
   };
+
+  function genreSearchWrapper() {
+    searchByGenreHandler(prev => !prev);
+  }
 
   return (
     <form onSubmit={handleSubmit} className="search--form">
       <div className="search-bar-and-button">
         <input id="search-input" className='form-control'
           type="search"
-          placeholder="Search a Book Title" 
+          placeholder="Search a Book Title"
           value={searchTerm}
           onChange={handleChange}
         />
 
-      <button type="submit" className='btn btn-primary' style={{'borderRadius': 8}}>
-        Search
-      </button>
+        <button type="submit" className='btn btn-primary' style={{ 'borderRadius': 8 }}>
+          Search
+        </button>
+        <button type="button" className='btn btn-light' style={{ 'borderRadius': 8, 'padding': '1px 5px' }} onClick={genreSearchWrapper}>
+          Search By Genre
+        </button>
       </div>
       {error && <div className="errorMsg alert alert-danger" style={errorStyles}>{error}</div>}
     </form>
@@ -26,29 +33,3 @@ function SearchComponent({handleSubmit, searchTerm, handleChange, error}) {
 }
 
 export default SearchComponent;
-
-// {error && <div>
-//   <div 
-//     style={{
-//       position: 'fixed',
-//       top: '50%',
-//       left: '50%',
-//       transform: 'translate(-50%, -50%)',
-//       backgroundColor: 'white',
-//       padding: '1rem',
-//       border: '1px solid black',
-//     }}
-//   >
-//       {error}
-//   </div>
-//   <div
-//     style={{
-//       position: 'fixed',
-//       top: 0,
-//       left: 0,
-//       width: '100vw',
-//       height: '100vh',
-//       backgroundColor: 'rgba(0, 0, 0, 0.3)',
-//     }}
-//   ></div>
-// </div>}

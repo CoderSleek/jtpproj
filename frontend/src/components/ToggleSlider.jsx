@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function ToggleSlider({handleToggle, toggleStatus}){
+function ToggleSlider({ handleToggle, toggleStatus }) {
 
-    function toggleHandler(){
-        handleToggle(prev => !prev);
-    }
+  function toggleHandler() {
+    handleToggle(prev => !prev);
+  }
 
   return (
-    <div className="form-check form-switch" style={{'width': '100%', 'marginBottom': '30px'}}>
+    <div className="form-check form-switch" style={{ 'width': '100%', 'marginBottom': '30px' }}>
       <input
         className="form-check-input"
         data-container="body"
@@ -19,7 +19,7 @@ function ToggleSlider({handleToggle, toggleStatus}){
         type="checkbox"
         checked={toggleStatus}
         onChange={toggleHandler}
-        style={{'float': 'right', 'marginRight': 'calc((100vw - 600px) / 2)', 'height': '20px', 'width': '45px'}}
+        style={{ 'float': 'right', 'marginRight': 'calc((100vw - 600px) / 2)', 'height': '20px', 'width': '45px' }}
       />
     </div>
   );

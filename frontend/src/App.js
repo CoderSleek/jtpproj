@@ -5,22 +5,10 @@ import ToggleSlider from './components/ToggleSlider';
 import BookTile from './components/BookTile';
 import SearchComponent from './components/SearchComponent';
 import PaginationButtons from './components/PaginationButtons';
+import { API_URL } from './index.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Tooltip from './components/test';
-import InfoBox from './components/InfoBox';
-
-const API_URL = 'http://localhost:5000';
-let bookSearchEles = [];
-
-function mapBookObjectToBookTile(bookObject, infoCardState, setInfoCardState) {
-	return <BookTile
-		key={bookObject['_id']}
-		bookObject={bookObject}
-		infoCardState={infoCardState}
-		handleSetInfoCardState={setInfoCardState}
-	/>
-}
+import SelectComponent from './components/SelectComponent';
 
 function App() {
 	const [pageNumber, setPageNumber] = useState(0);
@@ -28,9 +16,10 @@ function App() {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [error, setError] = useState('');
 	const [bookRecommEles, setBookRecommEles] = useState([]);
-	const [infoBox1Content, setInfoBox1Content] = useState([]);
-	const [infoBox2Content, setInfoBox2Content] = useState([]);
 	const [booksRecommendationList, setBooksRecommendationList] = useState([]);
+	const [searchByGenre, setSearchByGenre] = useState(false);
+	const [bookSearchEles, setBookSearchEles] = useState([]);
+	const [firstSearchObject, setFirstRecommendationObject] = useState(null);
 
 	useEffect(() => {
 		try {
@@ -52,10 +41,10 @@ function App() {
 
 	useEffect(() => {
 		createBookRecommEles();
-	}, [pageNumber , booksRecommendationList]);
+	}, [pageNumber, booksRecommendationList]);
 
 	function setErrorWrapper(errorMsg) {
-		bookSearchEles = [];
+		setBookSearchEles([]);
 		setBooksRecommendationList([]);
 		setBookRecommEles([]);
 		setPageNumber(0);
@@ -63,13 +52,16 @@ function App() {
 	}
 
 	function createFuzzySearchEles(data) {
-		bookSearchEles = data['searched'].map(bookObject => {
-			return mapBookObjectToBookTile(bookObject, infoBox1Content, setInfoBox1Content);
+		setFirstRecommendationObject(data['searched'][0]);
+		const temp = data['searched'].map(bookObject => {
+			return mapBookObjectToBookTile(bookObject, 'search');
 		});
+		setBookSearchEles(temp);
 	}
 
 	function createExactSearchEles(data) {
-		bookSearchEles = [mapBookObjectToBookTile(data['searched'], infoBox1Content, setInfoBox1Content)]
+		setFirstRecommendationObject(data['searched']);
+		setBookSearchEles([mapBookObjectToBookTile(data['searched'], 'search')]);
 	}
 
 	function createBookRecommEles() {
@@ -79,7 +71,7 @@ function App() {
 
 		const tempArr = booksRecommendationList.slice(pageNumber * 5, (pageNumber + 1) * 5);
 		setBookRecommEles(tempArr.map(bookObject => {
-			return mapBookObjectToBookTile(bookObject, infoBox2Content, setInfoBox2Content);
+			return mapBookObjectToBookTile(bookObject, 'recommendation');
 		}));
 	}
 
@@ -123,6 +115,15 @@ function App() {
 		} catch (err) { setErrorWrapper('Connectivity issue') }
 	}
 
+	function mapBookObjectToBookTile(bookObject, type) {
+		return <BookTile
+			key={bookObject['_id']}
+			bookObject={bookObject}
+			type={type}
+			firstSearchObject={firstSearchObject}
+		/>
+	}
+
 	return (
 		<>
 			<SearchComponent
@@ -130,11 +131,20 @@ function App() {
 				searchTerm={searchTerm}
 				handleChange={handleSearchTermChange}
 				error={error}
+				searchByGenreHandler={setSearchByGenre}
 			/>
 			<ToggleSlider
 				handleToggle={setIsFuzzy}
 				toggleStaus={isFuzzy}
 			/>
+			{searchByGenre &&
+				<SelectComponent
+					setErrorHandler={setErrorWrapper}
+					setBookSearchEles={setBookSearchEles}
+					setRecommBookHandler={setBooksRecommendationList}
+					mapBookObjectToBookTile={mapBookObjectToBookTile}
+				/>
+			}
 			{bookSearchEles.length > 0 && <div className='search--book-box'>
 				<h2 className='book--box-title'>Search Results</h2>
 				<div className="search--list">
@@ -163,7 +173,6 @@ function App() {
 				} */}
 			</div>}
 			{bookRecommEles.length > 0 && <PaginationButtons handlePageNumberChange={setPageNumber} />}
-			<Tooltip text="hello" />
 		</>
 	);
 }

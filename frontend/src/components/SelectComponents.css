@@ -1,0 +1,50 @@
+.multi--select-container{
+    width: 50%;
+    margin-left: auto;
+    margin-bottom: auto;
+    transform: translate(-50%);
+    height: fit-content;
+    border-radius: 8px;
+}
+
+.multi--select{
+    height: 300px;
+}
+
+.multi--select-wrapper{
+    border-radius: 8px;
+    background-color: aliceblue;
+}
+
+.button-1 {
+  background-color: rgb(13, 110, 253);
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 500;
+  height: 40px;
+  line-height: 20px;
+  list-style: none;
+  margin: 0;
+  margin-top: 8px;
+  outline: none;
+  padding: 10px 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.button-1:hover,
+.button-1:focus {
+  background-color: #0b5ed7
+}

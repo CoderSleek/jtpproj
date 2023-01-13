@@ -6,6 +6,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.stem import PorterStemmer
 
+import sys 
+sys.path.append('../')
+
 import database.book as db
 
 def _convert(literal: str) -> list:
@@ -78,7 +81,7 @@ def getTopGenres():
     df = df[['genres']]
     df['genres'] = df['genres'].apply(lambda x: ' '.join([i.replace(' ', '') for i in x]))
 
-    vectorize = CountVectorizer(max_features=100)
+    vectorize = CountVectorizer(max_features=100, lowercase=False)
     matrix = vectorize.fit_transform(df['genres'])
     
     x = vectorize.get_feature_names_out()
@@ -89,7 +92,7 @@ def getTopGenres():
 
 
 if __name__ == '__main__':
-    createModel()
-    # getTopGenres()
+    # createModel()
+    getTopGenres()
 
 #difflib

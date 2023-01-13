@@ -1,4 +1,35 @@
-.info--box-1, .info--box-2{
-    width: 80%;
-    background-color: antiquewhite;
-  }
+.data{
+  background-color: aliceblue;
+  border-radius: 5px;
+  position: relative;
+  top: 5%;
+  left: 50%;
+  width: 80%;
+  transform: translate(-50%);
+  padding: 15px;
+  font-family: 'Nunito';
+}
+
+.modal--img{
+  max-height: 300px;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.modal--rating{
+  size: 18px;
+}
+
+.modal--rating-img{
+  height: 18px;
+  width: 18px;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.modal--close{
+  float: right;
+}

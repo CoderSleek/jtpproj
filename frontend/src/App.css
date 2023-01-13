@@ -21,6 +21,7 @@
 
 .book--box-title{
   margin-left: calc(((100vw - 80%) / 2 + 3px));
+  font-family: 'Nunito';
 }
 
 .search--book-box{

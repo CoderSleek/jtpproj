@@ -39,6 +39,31 @@ def recommendrandom(res: Response) -> dict | None:
         return None
 
 
+@router.post('/recommendbygenre', tags=['recommend'])
+def recommendByGenre(listofgenres: list) -> dict:
+    try:
+        documents = list(db.book.getRandomDocumentsByGenre(listofgenres))
+
+        return {
+            'suggested': convertObjectIdToString(documents)
+        }
+
+    except Exception as e:
+        return None
+
+
+@router.get('/gettopgenres', tags=['genres'])
+def recommendByGenre() -> dict:
+    try:
+        genreList = list(db.book.getListOfTopGenres())
+        return {
+            'genres': genreList
+        }
+
+    except Exception as e:
+        return None
+
+
 def _fuzzySearch(title: str):
     listoftitles = list(db.book.fuzzyTitleSearch(title))
 

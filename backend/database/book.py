@@ -3,7 +3,8 @@ import pymongo
 from bson.objectid import ObjectId
 import os
 
-_client = pymongo.MongoClient(os.environ['MONGODB_URL'])
+# _client = pymongo.MongoClient(os.environ['MONGODB_URL'])
+_client = pymongo.MongoClient('mongodb://localhost:27017')
 _database = _client.books
 _collection = _database.book
 
@@ -44,4 +45,27 @@ def getDocumentByTitle(title: str) -> dict | None:
         return document
 
     except Exception as e:
+        return None
+
+def getRandomDocumentsByGenre(listOfGenres: list) -> 'pymongo.cursor | None':
+    try:
+        documents = _collection.aggregate([
+                {"$match": {"genres": {"$all": listOfGenres}}},
+                {"$project": _filter},
+                {"$sample": {"size": 5}}
+            ])
+
+        return documents
+    
+    except Exception as e:
+        return None
+
+
+def getListOfTopGenres() -> list:
+    try:
+        documents = _collection.find_one({'type': 'genres'})['data']
+        return documents
+    
+    except Exception as e:
+        print(e)
         return None
