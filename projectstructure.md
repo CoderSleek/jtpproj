@@ -79,3 +79,35 @@
     - scikit-learn
     - nltk
     - python-decouple
+
+# Frontend
+
+    runs on port 3000
+    run by react start [developer mode]
+    following project structure
+
+    frontend/                               - root folder
+    -public/                                - contains html page and other static assets
+    -src/                                   - source files
+        -components/                        - smaller components of app
+        -BookTile.jsx & BookTile.css        - represents each book card show in webpage
+        -Genres.jsx                         - returns genres element decorated if matching another item
+        -InfoBox.css & InfoBox.jsx          - information Modal component
+        -PaginationButtons.jsx              - switch page component and state management
+        - SearchComponent.jsx & css         - search box and button components
+        -SelectComponent.jsx & css          - RecommendByGenre Component
+        -ToggleSlider.jsx                   - SearchComponent sub-component
+    -App.css & App.js                       - main business logic of the webapp
+    -index.js & index.css                   - root render component  
+    -.dockerignore
+    -.gitignore                       
+    -package-loc.json
+    -package.json                           -dependencies
+    -readme.md        
+
+
+    dependencies
+    - react
+    - babel
+    - bootstrap
+    - multilist-react
