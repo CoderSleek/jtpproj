@@ -70,7 +70,7 @@
 
 ### Contributing
 
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
+    Feel free to open a pull request if you have something to contribute
 
 
 ### Authors
@@ -91,3 +91,8 @@ Please read CONTRIBUTING.md for details on our code of conduct, and the process 
 ### Found a bug?
 
     If you found a bug or would like to submit an improvement to this project , please submit it to the issues tab above
+
+
+#### Licensing
+
+    Personal Use

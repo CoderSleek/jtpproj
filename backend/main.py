@@ -1,8 +1,7 @@
-from fastapi import FastAPI, Request, Response, status, APIRouter
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
 from controllers.movies import router as moviesRouter
-import database
 
 app = FastAPI()
 

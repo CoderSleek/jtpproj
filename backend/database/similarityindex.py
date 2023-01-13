@@ -26,9 +26,10 @@ def getBookIdsUsingIndexes(indexList: list):
         return None
 
 
+#writes the recommender model to the database
 def writeMatrixToDb(dataframe: 'pandas.Dataframe', similaritymatrix: 'numpy.ndarray'):
     try:
-        for index, value in dataframe.iterrows():
+        for index, value in dataframe.iterrows(): #similar to enumerate
             _collection.insert_one({
                 'index': index,
                 'bookid': ObjectId(value['_id']),
@@ -36,4 +37,4 @@ def writeMatrixToDb(dataframe: 'pandas.Dataframe', similaritymatrix: 'numpy.ndar
             })
 
     except Exception as e:
-        print('exception', e)
+        return None
