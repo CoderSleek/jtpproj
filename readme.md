@@ -49,13 +49,6 @@
 
     You're all Set!
 
-    PS: if you're having trouble with setting up the database then
-    
-    first run the mongo_database container
-    then in terminal type the following command :-
-        docker exec -it <container name> bash
-        mongorestore -d books <path to backup folder downloaded via google drive>
-
 
 ## Application details
 
