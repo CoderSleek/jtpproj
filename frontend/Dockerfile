@@ -2,7 +2,7 @@ FROM node:16.14-alpine
 
 WORKDIR /app
 
-RUN npm install create-react-app
+RUN npm install -g create-react-app
 
 COPY package*.json ./
 

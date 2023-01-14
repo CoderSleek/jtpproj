@@ -40,4 +40,5 @@ services:
 
 
 volumes:
-  mongo_db: {}
+  mongo_db:
+    name: 'jtpproj_mongo_db'
