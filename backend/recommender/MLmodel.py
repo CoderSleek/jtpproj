@@ -1,3 +1,18 @@
+'''This file contains all the functions neccessary to create the recommender model
+and list of top 100 genres as well as calls the database module to store them in the database
+
+it is not required to run this script as the model is already once created and stored in database
+from where it can be retrieved when the REST API calls are being performed
+this file is included for reference only and will not run when the backend is initiated
+
+There are a total of 6 functions inside this file 
+'createModel', '/getTopGenres' and 4 helper functions
+'_convert', '_tokeniseAuthorName', '_joinWords', '_joinStrings'
+
+This file requires a module database from a sibling directory
+hence os.path.append is used to add the directory so that it can be imported
+'''
+
 import pandas as pd
 import math
 import re
@@ -11,22 +26,52 @@ sys.path.append('../')
 
 import database.book as db
 
-
-#cleans a string by removing punctuation, returns list of words
 def _convert(literal: str) -> list:
-    #for empty description handling
+    '''This function cleans the description string by removing unncessary punctuations
+    and converts the string into a list of words splitting them by space charachter
+
+    This function acts as a callback function to pandas.Dataframe.column.apply method
+    
+    Parameters
+    ----------
+    literal: str
+        a string containing the description of a panda.Dataframe row
+
+    Returns
+    -------
+    list of words separated by space charachter.
+    '''
+
+    # if the description is empty it is stored as NaN which is a float instance
+    # this check is done to return an empty list if the description is empty
     if isinstance(literal, float):
         return []
 
-    #substituing punctuations and extra spaces
+    # substituing punctuations(,.-) with a space charachter
     literal = re.sub(r'[\.,-]', ' ', literal)
+    # removes all other charachters which are not letters digits or spaces (other punctuations)
     literal = re.sub(r'[^\w\s]', '', literal)
     
+    # removes trailing whitespaces, redundant spaces and splits the string by each word
     return literal.strip(' ').replace('  ', ' ').split(' ')
 
 
-#removes unncessary info like author role from the author string in the format '(xyz)'
 def _tokeniseAuthorName(literal: str) -> list:
+    '''This function cleans the author string by removing unncessary details such as
+    their role in a book example (author) or (illustrator) these details are always in
+    the form of (xyz)
+
+    This function acts as a callback function to pandas.Dataframe.column.apply method
+    
+    Parameters
+    ----------
+    literal: str
+        a string containing the description of a panda.Dataframe row
+
+    Returns
+    -------
+    list of words separated by space charachter.
+    '''
     literal = re.sub('\s\([a-zA-Z ]*\)*', '', literal)
     literal = literal.replace(' ', '')
     return literal.split(',')
@@ -62,7 +107,7 @@ def createModel() -> None:
     df = df[['_id', 'title', 'description', 'genres', 'characters', 'setting', 'author']]
 
     #cleaning the dataset
-    df['description'] = df['description'].apply(self._convert)
+    df['description'] = df['description'].apply(_convert)
     df['author'] = df['author'].apply(self._tokeniseAuthorName)
     df['genres'] = df['genres'].apply(self._joinWords)
     df['setting'] = df['setting'].apply(self._joinWords)

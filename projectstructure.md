@@ -80,6 +80,7 @@
     - nltk
     - python-decouple
 
+
 # Frontend
 
     runs on port 3000

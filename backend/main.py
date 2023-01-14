@@ -1,7 +1,7 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
-from controllers.movies import router as moviesRouter
+from controllers.router import router as moviesRouter
 
 app = FastAPI()
 
