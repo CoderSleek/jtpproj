@@ -42,7 +42,7 @@ function InfoBox(props) {
             <br />
             {
                 flag ?
-                <Genre list1={genres1} list2={genres2} /> :
+                <Genre list1={genres1} list2={genres2}/> :
                 bookObject.genres &&
                 <div>
                     <span className="bold">Genres: </span>

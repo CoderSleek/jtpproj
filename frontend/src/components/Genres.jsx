@@ -10,17 +10,17 @@ import React from 'react';
  * @param {*} { list1, list2} list of words in genre
  * @returns {JSX component}
  */
-function Genre({ list1, list2, key}) {
+function Genre({ list1, list2}) {
   // list containing common words
-  const matchingWords = list1.filter(word => list2.includes(word));
+  const matchingWords = list1.filter( word => list2.includes(word));
 
   return (
     <>
       <span className="bold">Genres: </span>
       <span>
         {
-          list1.map(word => (
-            <span style={{ backgroundColor: matchingWords.includes(word) ? 'yellow' : 'inherit' }} key={key}>
+          list1.map( (word, index) => (
+            <span style={{ backgroundColor: matchingWords.includes(word) ? 'yellow' : 'inherit' }} key={index}>
               {`${word}, `}
             </span>
           ))
