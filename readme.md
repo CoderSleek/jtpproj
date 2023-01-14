@@ -16,18 +16,51 @@
 
 ## Getting Started
 
-    To get started first install the git CLI at https://git-scm.com/downloads
-    Then login with your credentials in the CLI
-    Clone this project on your local machine using git clone https://github.com/CoderSleek/jtpproj
-    Download docker desktop for you OS from https://www.docker.com/products/docker-desktop/
-    Navigate to the directory containg the project
-    Open up a terminal in the correct folder
-    Ensure you're in the same folder as the file containing docker-compose.yml
-    Run command 'docker compose up'
-    Port 3000 will be used for the front-end react application, 5000 for backend API and 27017 for MongoDB
-    You're all Set!
-    Alternatively you could also download all the dependencies yourself and start the program manually
+    To get started first install the git CLI at (https://git-scm.com/downloads)
 
+    Then login with your credentials in the CLI
+
+    Clone this project on your local machine using git clone (https://github.com/CoderSleek/jtpproj)
+
+    Download docker desktop for you OS from (https://www.docker.com/products/docker-desktop/)
+    
+    Pull docker images from dockerHub using
+        - docker pull devnarula/jtpproj-backend
+        - docker pull devnarula/jtpproj-frontend
+        - docker pull devnarula/mongo_database
+
+    This project depends on a MongoDB database which can be downloaded at (https://drive.google.com/drive/folders/1hSTX6VSCKBEFHoZrQosBvpQtYslmlaiF?usp=sharing)
+
+    extract the zip file just downloaded
+
+    run the shell script provided in the folder you extracted this will install the database in the docker container
+
+    Navigate to the directory containg the project
+
+    Open up a terminal in the correct folder
+
+    Ensure you're in the same folder as the file containing docker-compose.yml
+
+    Run command 'docker compose up'
+
+    Port 3000 will be used for the front-end react application, 5000 for backend API and 2717 for MongoDB
+
+    You're all Set!
+
+    PS: if you're having trouble with setting up the database then
+    
+    first run the mongo_database container
+    then in terminal type the following command :-
+        docker exec -it <container name> bash
+        mongorestore -d books <path to backup folder downloaded via google drive>
+
+
+## Application details
+
+    The application contains a blue slider which will turn keyword search on or off (on recommended)
+    keyword search will enable you to search with keywords only ex :- (harry potter)
+    keyword search off only allow exact title search and is not case sensitive ex :- (The Hunger Games)
+    search by genre allows you to choose a list of genres using which one can search the database
 
 ### Prerequisites
 
