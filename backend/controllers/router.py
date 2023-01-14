@@ -319,7 +319,7 @@ def _write_to_log_file(err: Exception) -> None:
     None.
     '''
 
-    with open('../logfile.log', 'a') as logfile:
+    with open('logfile.log', 'a') as logfile:
         # prettify the exception details
         # format_exc returns a string of information and stack trace entries from traceback object
         exception_detail = format_exc().split('\n')[1:]
