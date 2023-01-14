@@ -22,6 +22,8 @@
 
     Clone this project on your local machine using git clone (https://github.com/CoderSleek/jtpproj)
 
+    all the files are in the main branch of the repository
+
     Download docker desktop for you OS from (https://www.docker.com/products/docker-desktop/)
     
     Pull docker images from dockerHub using
