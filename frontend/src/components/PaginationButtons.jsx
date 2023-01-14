@@ -1,5 +1,10 @@
 import React from "react";
 
+/**
+ * This function returns a component containing buttons to switch from one page to another
+ * @param {function} function to set state of the pageNumber variable 
+ * @returns {JSX component}
+ */
 function PaginationButtons({ handlePageNumberChange }) {
     const styles = {
         'marginTop': '10px',
@@ -13,16 +18,19 @@ function PaginationButtons({ handlePageNumberChange }) {
         'borderColor': 'white'
     };
 
+    // wrapper for setState of page number
     function wrapSetPageNumber(pageNumber) {
         handlePageNumberChange(pageNumber);
     }
 
+    // wrapper for decrement page number by 1
     function wrapChangePgNumDec() {
         handlePageNumberChange(prev => {
             return prev === 0 ? prev : prev - 1;
         });
     }
 
+    // wrapper for page number increment
     function wrapChangePgNumInc() {
         handlePageNumberChange(prev => {
             return prev === 3 ? prev : prev + 1;

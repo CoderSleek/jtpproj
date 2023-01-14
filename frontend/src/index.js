@@ -1,3 +1,8 @@
+/**
+ * This file only renders the root component and stores the URL of API
+ * it has no other use
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
