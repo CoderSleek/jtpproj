@@ -154,6 +154,15 @@ def getRandomDocumentsByGenre(listOfGenres: list) -> 'pymongo.cursor | None':
         return None
 
 
+def getListOfTopGenres() -> "pymongo.cursor":
+
+    try:
+        list_of_genres = _collection.find_one({'type': 'genres'}, {'_id': 0, 'data': 1})['data']
+        return list_of_genres
+
+    except Exception as e:
+        _write_to_log_file(e)
+
 def _write_to_log_file(err: Exception) -> None:
     '''This function is a helper function that writes data to log file in case of an exception
     the log file is in the /backend folder of the application and is opened in append mode

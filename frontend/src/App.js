@@ -93,7 +93,7 @@ function App() {
 				API_URL + '/recommendbysearch?' +
 				new URLSearchParams({
 					'title': searchTerm.trim(),
-					'fuzzy': isFuzzy
+					'is_fuzzy': isFuzzy
 				}).toString(),
 				{
 					method: 'GET'

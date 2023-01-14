@@ -59,86 +59,161 @@ def _convert(literal: str) -> list:
 def _tokeniseAuthorName(literal: str) -> list:
     '''This function cleans the author string by removing unncessary details such as
     their role in a book example (author) or (illustrator) these details are always in
-    the form of (xyz)
+    the form of 'name (role)' the string is further split into a list of names
 
     This function acts as a callback function to pandas.Dataframe.column.apply method
     
     Parameters
     ----------
     literal: str
-        a string containing the description of a panda.Dataframe row
+        A string containing author name of a panda.Dataframe row
 
     Returns
     -------
-    list of words separated by space charachter.
+    list of string containing author names
     '''
-    literal = re.sub('\s\([a-zA-Z ]*\)*', '', literal)
+
+    # replace part of string in format ' (role)'
+    literal = re.sub('\s\([a-zA-Z0-9 ]*\)*', '', literal)
     literal = literal.replace(' ', '')
     return literal.split(',')
 
 
-#remove whitespaces for stemming
 def _joinWords(listOfLiteral: list) -> list:
+    '''This function joins words separated by a space in a list of strings
+
+    This function acts as a callback function to pandas.Dataframe.column.apply method
+    
+    Parameters
+    ----------
+    listOfLiteral: list
+        A list of strings in a panda.Dataframe row
+        example ['Young Fiction', 'Fantasy']
+
+    Returns
+    -------
+    list of string with their words tokenized by joining them removing spaces
+    '''
     listOfLiteral = [i.replace(' ', '') for i in listOfLiteral]
     return listOfLiteral
 
 
-#recieves various lists of words, returns a combined and stemmed list
 def _joinStrings(*listOfLiteral: list) -> list:
+    '''This function recieves a list of lists having the same length
+    it then combines all these different lists containing tags into a single
+    string of meta tags for each list which can then be used to create the recommendation model
+
+    This function acts as a callback function to pandas.Dataframe.column.apply method
+    
+    Parameters
+    ----------
+    listOfLiteral: list
+        A list of lists containing strings
+
+    Returns
+    -------
+    list combining all the meta tags found in listOfLiteral with each item in list being a string
+
+    Example
+    -------
+    recieves [['a', 'b'], ['c', 'd'], ['e', 'f']]
+    returns ['a b', 'c d', 'e f']
+    '''
     tags_list = []
 
+    # iterate over ith item in all the list at the same time
     for (genre, desc, auth, char, setting) in zip(*listOfLiteral):
+        # stemmer reduces words to their base grammitcal form
         stemmer = PorterStemmer()
 
         genre_stemmed = [stemmer.stem(word) for word in genre]
         desc_stemmed = [stemmer.stem(word) for word in desc]
 
+        # join various list of strings into a single string and append it tags_list
         tags_list.append(' '.join([*genre_stemmed, *desc_stemmed, *auth, *char, *setting]).lower())
         
 
     return tags_list
 
 
-#create the recommender model using cosine similarity
 def createModel() -> None:
-    #convert json to panda Dataframe
+    '''This function creates the recommendation model used for recommending books
+    it uses various helper functions '_joinStrings', '_joinWords', '_tokeniseAuthorName'
+    '_convert' to create a set of tags, whose top recurring 5000 words are counter by
+    CountVectorizer and recommender model is created by finding the cosine similarity
+    of each book against all the books, this results in a 2d matrix where each books
+    similarity is plotted against all the other boks
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    '''
+    # convert json to panda Dataframe
     df = pd.json_normalize(db.getAllDocuments())
-    #extract meaningful values
+
+    # extract meaningful values
     df = df[['_id', 'title', 'description', 'genres', 'characters', 'setting', 'author']]
 
-    #cleaning the dataset
+    # cleaning the DataFrame and reassigning it to its respective column
     df['description'] = df['description'].apply(_convert)
-    df['author'] = df['author'].apply(self._tokeniseAuthorName)
-    df['genres'] = df['genres'].apply(self._joinWords)
-    df['setting'] = df['setting'].apply(self._joinWords)
-    df['characters'] = df['characters'].apply(self._joinWords)
+    df['author'] = df['author'].apply(_tokeniseAuthorName)
+    df['genres'] = df['genres'].apply(_joinWords)
+    df['setting'] = df['setting'].apply(_joinWords)
+    df['characters'] = df['characters'].apply(_joinWords)
 
+    # creating another dataframe containing all the final data
     df2 = df[['_id', 'title']].copy() #deep copy
-    df2['tags'] = self._joinStrings(df['genres'], df['description'], df['author'], df['characters'], df['setting'])
+    df2['tags'] = _joinStrings(df['genres'], df['description'], df['author'], df['characters'], df['setting'])
 
-    #computes the recommendation model, similarityMatrix is the similarity index
+    # setting up the count function, counts top 5000 recurring words, removes unneccesary keywords like 'in'. 'the', 'is'
     vectorizer = CountVectorizer(max_features=5000, stop_words='english')
+
+    # applying the function on meta tags
     vectorizedArray = vectorizer.fit_transform(df2['tags']).toarray()
+
+    # computes the recommendation model, similarityMatrix is the similarity index
     similarityMatrix = cosine_similarity(vectorizedArray)
     
+    # write matrix to database
     db.writeMatrixToDb(df2, similarityMatrix)
 
 
-#retrieve top genres
 def getTopGenres() -> None:
+    '''This function finds the top 100 genres found in books, this helps create a list
+    that can then be used to search a book genre
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    '''
+
+    # get all items from db
     df = pd.json_normalize(db.getAllDocuments())
     df = df[['genres']]
-    #combine words to rep. 1 term
+
+    # combine space separated words into a single word
     df['genres'] = df['genres'].apply(lambda x: ' '.join([i.replace(' ', '') for i in x]))
 
+    # setting up count function to get only top 100 genres of all book genres
     vectorize = CountVectorizer(max_features=100, lowercase=False)
     matrix = vectorize.fit_transform(df['genres'])
     
+    # get the list of words
     mostOccuringWords = vectorize.get_feature_names_out()
+    # get their respective frequencies
     frequencies = matrix.toarray().sum(axis=0)
 
-    frequencies = list(zip(x,y))
-    frequencies.sort(reverse=True,key=lambda x: x[1])
+    # zip both word and frequency into a single tuple
+    list_of_tuple_having_word_and_frequency = list(zip(mostOccuringWords, frequencies))
+    list_of_tuple_having_word_and_frequency.sort(reverse=True,key=lambda x: x[1])
 
 
 if __name__ == '__main__':

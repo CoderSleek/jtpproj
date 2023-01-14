@@ -9,7 +9,6 @@ for use inside this file only, these are
 
 Whenever an exception is countered in any of the helper or HTTP request callback function
 the default response returned is None.
-
 '''
 
 from fastapi import APIRouter, Response, status
@@ -62,7 +61,7 @@ async def search_and_recommend_movie(title: str, is_fuzzy: bool, res: Response) 
 
     try:
         #fuzzy search may result a list of search items, exact search always returns one
-        if fuzzy:
+        if is_fuzzy:
             return _fuzzy_search(title)
         else:
             return _exact_search(title)
@@ -164,7 +163,7 @@ async def recommend_by_genre(listofgenres: list) -> dict | None:
 # GET route to return a list of top 100 genres of books
 # get method recieves no additional parameters
 @router.get('/gettopgenres', tags=['genres'])
-async def get_top_genres() -> dict | None:
+async def get_top_genres(res: Response) -> dict | None:
     '''This function returns a dict containing list of top 100 genres
 
     This function recieves no parameters
@@ -319,9 +318,10 @@ def _write_to_log_file(err: Exception) -> None:
     -------
     None.
     '''
+
     with open('../logfile.log', 'a') as logfile:
         # prettify the exception details
         # format_exc returns a string of information and stack trace entries from traceback object
         exception_detail = format_exc().split('\n')[1:]
         print(' '.join(exception_detail), file=logfile)
-        print(err)
+        print(err, file=logfile)

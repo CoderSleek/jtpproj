@@ -61,7 +61,6 @@
         -__init__.py
         -MLmodel.py             - model generator
         -recommender.py         - predictor
-    -services/
     -.dockerignore
     -.env                       - env variables
     -Dockerfile                 - building docker image

@@ -77,7 +77,7 @@ def getBookIdsUsingIndexes(indexList: list) -> "pymongo.cursor | None":
 def writeMatrixToDb(dataframe: 'pandas.Dataframe', similaritymatrix: 'numpy.ndarray') -> None:
     '''This function writes the generated recommendation model to database
     it writes and index field type int(0-9999)
-    a data field which is an array of 10000 elements
+    a data field which is an array of 10000 elements it is converted by pickle to binary before storage
     and a bookid which is an ObjectId refering to a book object to which this data belongs
     
     Parameters
@@ -95,6 +95,7 @@ def writeMatrixToDb(dataframe: 'pandas.Dataframe', similaritymatrix: 'numpy.ndar
     '''
     try:
         # .iterrows method similar to enumerate returns an index and row value
+        # the data field is an array of floats which is converted to binary form using pickle
         for index, value in dataframe.iterrows():
             _collection.insert_one({
                 'index': index,
