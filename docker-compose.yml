@@ -5,7 +5,7 @@ services:
     image: "mongo:latest"
     container_name: mongo_database
     volumes:
-      - mongo_db:/data/db
+      - jtpproj_mongo_db:/data/db
     ports:
       - 2717:27017
 
@@ -19,8 +19,6 @@ services:
       MONGODB_URL: "mongodb://mongo_database:27017"
     depends_on:
       - database
-    volumes:
-      - ./backend:/app
 
 
   frontend:
@@ -32,10 +30,8 @@ services:
       - backend
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
 
 
 volumes:
-  mongo_db:
+  jtpproj_mongo_db:
     name: 'jtpproj_mongo_db'
