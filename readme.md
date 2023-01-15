@@ -47,6 +47,8 @@
 
     Port 3000 will be used for the front-end react application, 5000 for backend API and 2717 for MongoDB
 
+    open localhost:3000/ on your machine in a web browser
+
     You're all Set!
 
 
