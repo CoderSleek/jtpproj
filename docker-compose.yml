@@ -8,7 +8,6 @@ services:
       - mongo_db:/data/db
     ports:
       - 2717:27017
-    restart: always
 
 
   backend:
@@ -16,8 +15,6 @@ services:
     container_name: backend
     ports:
       - 5000:5000
-    # links:
-    #   - mongo_database
     environment:
       MONGODB_URL: "mongodb://mongo_database:27017"
     depends_on:
