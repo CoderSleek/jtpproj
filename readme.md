@@ -31,7 +31,7 @@
         - docker pull devnarula/jtpproj-frontend
         - docker pull devnarula/mongo_database
 
-    This project depends on a MongoDB database which can be downloaded at (https://drive.google.com/drive/folders/1hSTX6VSCKBEFHoZrQosBvpQtYslmlaiF?usp=sharing)
+    This project depends on a MongoDB database which can be downloaded at (https://drive.google.com/drive/folders/1GCgp73H5ChM3rfwUkXHut40y6ART7qiY?usp=sharing)
 
     extract the zip file just downloaded
 
