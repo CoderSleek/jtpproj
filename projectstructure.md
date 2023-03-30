@@ -100,7 +100,7 @@
     -App.css & App.js                       - main business logic of the webapp
     -index.js & index.css                   - root render component  
     -.dockerignore
-    -.gitignore                       
+    -.gitignore                             - files to ignore in git
     -package-lock.json
     -package.json                           - dependencies      
 
